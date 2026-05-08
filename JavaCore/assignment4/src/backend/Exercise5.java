@@ -3,6 +3,10 @@ package backend;
 import entity.*;
 import enums.GioiTinh;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,6 +26,80 @@ public class Exercise5 {
     //c) Hiện thị thông tin về danh sách các cán bộ.
     //d) Nhập vào tên của cán bộ và delete cán bộ đó
     //e) Thoát khỏi chương trình.
+
+    public class DBConnection {
+
+        private static final String URL =
+                "jdbc:mysql://localhost:3306/qlcb";
+
+        private static final String USER = "root";
+
+        private static final String PASSWORD = "root";
+
+        public static Connection getConnection() {
+
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+
+                return DriverManager.getConnection(
+                        URL,
+                        USER,
+                        PASSWORD
+                );
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    public static List<CanBo> getDanhSachCanBo() {
+
+        List<CanBo> danhSach = new ArrayList<>();
+
+        String sql = "SELECT * FROM canbo";
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                Statement statement = connection.createStatement();
+
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+
+            while (resultSet.next()) {
+
+                CanBo canBo = new CanBo();
+                canBo.setHoTen(resultSet.getString("ho_ten"));
+                canBo.setTuoi(resultSet.getInt("tuoi"));
+                canBo.setGioiTinh(GioiTinh.valueOf( resultSet.getString("gioi_tinh")));
+                canBo.setDiaChi(resultSet.getString("dia_chi"));
+
+                danhSach.add(canBo);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return danhSach;
+    }
+
+    // Ham hien thi danh sach
+    public static void hienThiDanhSachCanBo() {
+
+        List<CanBo> danhSach = getDanhSachCanBo();
+
+        if (danhSach.isEmpty()) {
+            System.out.println("Danh sach rong!");
+            return;
+        }
+
+        for (CanBo canBo : danhSach) {
+            System.out.println(canBo);
+        }
+    }
 
     public static void  question2(){
         Scanner sc = new Scanner(System.in);
@@ -133,9 +211,8 @@ public class Exercise5 {
 
                     break;
                 case "3":
-                    for (CanBo cb : qlcb) {
-                        System.out.println(cb.toString());
-                    }
+                    hienThiDanhSachCanBo();
+                    break;
                 case "4":
                     System.out.print("Nhap ten can bo can xoa: ");
                     String tenXoa = sc.nextLine();
