@@ -6,7 +6,7 @@ public class DBConnect {
     public class Connection {
 
         private static final String URL =
-                "jdbc:mysql://localhost:3306/qlcb";
+                "jdbc:mysql://localhost:3306/dtn2601";
 
         private static final String USER = "root";
 
