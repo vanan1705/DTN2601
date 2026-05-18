@@ -28,4 +28,11 @@ public class AccountController {
     public List<Account> findByIdAndName(int searchId, String searchUserName) {
         return accountService.findByIdAndName(searchId, searchUserName);
     }
+    public boolean checkExistUserName(String userName, Integer id) {
+        return accountService.checkExistUserName(userName,id);
+    }
+
+    public boolean checkExistEmail(String email, Integer id) {
+        return accountService.checkExistEmail(email,id);
+    }
 }

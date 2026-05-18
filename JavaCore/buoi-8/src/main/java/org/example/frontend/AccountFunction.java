@@ -10,6 +10,7 @@ import org.example.entity.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class AccountFunction {
@@ -80,10 +81,47 @@ public class AccountFunction {
     }
 
     public  void insertAccount() {
-        System.out.println("Nhập email: ");
-        String email = sc.nextLine();
-        System.out.println("Nhập username: ");
-        String username = sc.nextLine();
+        String email;
+        while (true) {
+            boolean check = true;
+            String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+            System.out.println("Nhập email: ");
+            email = sc.nextLine();
+            // kiem tra tinh dung dan cua email
+            if (Objects.isNull(email)
+                    || email.trim().isEmpty()
+                    || !email.matches(regex)) {
+
+                System.out.println("Email không hợp lệ");
+                check = false;
+            }
+            if (accountController.checkExistEmail(email, null)) {// kiem tra email da ton tai chua
+                System.out.println("Email này đã tồn tại. Nhập lại email khác");
+                check = false;
+            }
+            if (check) {
+                break;
+            }
+        }
+        String userName;
+        while (true) {
+            boolean check = true;
+            System.out.println("Nhập username: ");
+            userName = sc.nextLine();
+            // kiem tra tinh dung dan cua user name
+            if (Objects.isNull(userName) || email.trim().isEmpty()) {
+                System.out.println("User Name không hợp lệ");
+                check = false;
+            }
+            if (accountController.checkExistUserName(userName, null)) {// kiem tra user name da ton tai chua
+                System.out.println("User Name này đã tồn tại. Nhập lại User Name khác");
+                check = false;
+            }
+            if (check) {
+                break;
+            }
+        }
+
         System.out.println("Nhập fullName: ");
         String fullName = sc.nextLine();
         System.out.println("Chọn ID department: ");
@@ -117,7 +155,7 @@ public class AccountFunction {
                 break;
             }
         }
-        boolean check = accountController.create(email, username, fullName, Integer.parseInt(depID), Integer.parseInt(poID));
+        boolean check = accountController.create(email, userName, fullName, Integer.parseInt(depID), Integer.parseInt(poID));
         if (check) {
             System.out.println("Thêm mới thành công");
         } else {
@@ -142,13 +180,50 @@ public class AccountFunction {
         System.out.println("Nhập ID cần sửa: ");
         int id = sc.nextInt();
         sc.nextLine();
-        System.out.println("Nhập email: ");
-        String email = sc.nextLine();
-        System.out.println("Nhập username: ");
-        String username = sc.nextLine();
-        System.out.println("Nhập fullName: ");
+        String email;
+        while (true) {
+            boolean check = true;
+            String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+            System.out.println("Nhập email cần sửa: ");
+            email = sc.nextLine();
+            // kiem tra tinh dung dan cua email
+            if (Objects.isNull(email)
+                    || email.trim().isEmpty()
+                    || !email.matches(regex)) {
+
+                System.out.println("Email không hợp lệ");
+                check = false;
+            }
+            if (accountController.checkExistEmail(email, id)) {// kiem tra email da ton tai chua
+                System.out.println("Email này đã tồn tại. Nhập lại email khác");
+                check = false;
+            }
+            if (check) {
+                break;
+            }
+        }
+        String userName;
+        while (true) {
+            boolean check = true;
+            System.out.println("Nhập username cần sửa: ");
+            userName = sc.nextLine();
+            // kiem tra tinh dung dan cua user name
+            if (Objects.isNull(userName) || email.trim().isEmpty()) {
+                System.out.println("User Name không hợp lệ");
+                check = false;
+            }
+            if (accountController.checkExistUserName(userName, id)) {// kiem tra user name da ton tai chua
+                System.out.println("User Name này đã tồn tại. Nhập lại User Name khác");
+                check = false;
+            }
+            if (check) {
+                break;
+            }
+        }
+
+        System.out.println("Nhập fullName cần sửa: ");
         String fullName = sc.nextLine();
-        System.out.println("Chọn ID department: ");
+        System.out.println("Chọn ID department cần sửa: ");
         List<Department> departments = departmentController.findAll();
         String depID;
         while (true) {
@@ -164,7 +239,7 @@ public class AccountFunction {
             }
         }
 
-        System.out.println("Chọn ID position: ");
+        System.out.println("Chọn ID position cần sửa: ");
         List<Position> positions = positionController.findAll();
         String poID;
         while (true) {
@@ -179,8 +254,7 @@ public class AccountFunction {
                 break;
             }
         }
-
-        boolean check = accountController.update(id, email ,fullName, username, Integer.parseInt(depID), Integer.parseInt(poID));
+        boolean check = accountController.update(id, email ,fullName, userName, Integer.parseInt(depID), Integer.parseInt(poID));
         if (check) {
             System.out.println("Update thành công");
         } else {

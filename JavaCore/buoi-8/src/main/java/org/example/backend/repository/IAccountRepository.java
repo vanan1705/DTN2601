@@ -10,4 +10,6 @@ public interface IAccountRepository {
     boolean update(int id, String updateEmail, String updateFullName, String updateUserName, int updateDepartmentId, int updatePositionId);
     boolean delete(int id);
     List<Account> findByIdAndName(int searchId, String searchUserName);
+    boolean checkExistUserName(String userName, Integer id);
+    boolean checkExistEmail(String email, Integer id);
 }

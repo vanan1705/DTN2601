@@ -13,4 +13,5 @@ public interface IPositonRepository {
     List<Position> findByIdAndName(int searchId, String searchName);
     List<Position> getPositionWithMaxEmployee();
     List<Position> getPositionWithMinEmployee();
+    boolean checkExistName(String name, Integer id);
 }

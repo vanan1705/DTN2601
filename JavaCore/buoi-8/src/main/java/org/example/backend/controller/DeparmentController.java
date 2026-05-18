@@ -32,4 +32,8 @@ public class DeparmentController {
     public List<Department> getDeparmentWithMinEmployee() {
         return deparmentService.getDeparmentWithMinEmployee();
     }
+
+    public boolean checkExistName(String name, Integer id) {
+        return deparmentService.checkExistName(name, id);
+    }
 }

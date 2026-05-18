@@ -47,4 +47,9 @@ public class DeparmentServiceImpl implements IDeparmentService {
         return null;
     }
 
+    @Override
+    public boolean checkExistName(String name, Integer id) {
+        return deparmentRepository.checkExistName(name, id);
+    }
+
 }

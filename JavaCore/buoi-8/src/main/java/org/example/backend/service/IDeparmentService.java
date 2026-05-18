@@ -12,4 +12,5 @@ public interface IDeparmentService {
     List<Department> findByIdAndName(int searchId, String searchName);
     List<Department> getDeparmentWithMaxEmployee();
     List<Department> getDeparmentWithMinEmployee();
+    boolean checkExistName(String name, Integer id);
 }
