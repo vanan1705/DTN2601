@@ -268,4 +268,33 @@ public class PositionRepositoryImpl implements IPositonRepository {
         }
         return check;
     }
+
+    @Override
+    public List<Position> findByName(String searchName) {
+        List<Position> positions = new ArrayList<>();
+
+        try {
+            // b1: kết nối đến DB
+            Connection connection = DBConnect.getConnection();
+            // b2: lấy dữ liệu từ bảng department
+            String sql = "select * from position where position_name like ?;";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            // set gia trị cho từng dấu ?
+            prepareStatement.setString(1, searchName);
+
+            ResultSet rs = prepareStatement.executeQuery();
+
+            while (rs.next()) {// lặp qua qua từng dòng của rs
+                int id = rs.getInt("position_id");
+                String name = rs.getString("position_name");
+
+                Position position = new Position(id, PositionEnum.valueOf( name));
+                positions.add(position);
+            }
+            DBConnect.close(connection, prepareStatement, rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return positions;
+    }
 }

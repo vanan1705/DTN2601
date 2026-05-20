@@ -15,4 +15,5 @@ public interface IAccountService {
     boolean checkExistEmail(String email, Integer id);
 
     List<Account> findByIdAndName(int searchId, String searchUserName);
+    String importAccountToCSV(String pathName);
 }

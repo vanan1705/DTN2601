@@ -2,6 +2,7 @@ package org.example.backend.repository;
 
 import org.example.entity.Department;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IDeparmentRepository {
@@ -13,4 +14,6 @@ public interface IDeparmentRepository {
     List<Department> getDeparmentWithMaxEmployee();
     List<Department> getDeparmentWithMinEmployee();
     boolean checkExistName(String name, Integer id);
+    boolean createDepartments(List<Department> departments)throws SQLException;
+    List<Department> findByName( String searchName);
 }

@@ -36,4 +36,8 @@ public class DeparmentController {
     public boolean checkExistName(String name, Integer id) {
         return deparmentService.checkExistName(name, id);
     }
+
+    public String importDepartmentToCSV(String pathName) {// trả về String; import thành công, import thất bại
+        return deparmentService.importDepartmentToCSV(pathName);
+    }
 }

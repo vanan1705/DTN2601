@@ -25,7 +25,8 @@ public class DepartmentFunction {
             System.out.println("5. Tìm kiếm department theo ID và tên phòng ban");
             System.out.println("6. In ra department có nhiều nhân viên nhất");
             System.out.println("7. In ra department có ít nhân viên nhất");
-            System.out.println("8. Thoát");
+            System.out.println("8. Import phòng ban từ file csv");
+            System.out.println("9. Thoát");
             String choice = sc.nextLine();
             switch (choice) {
                 case "1":
@@ -51,11 +52,22 @@ public class DepartmentFunction {
                     showDepartment( departmentController.getDeparmentWithMinEmployee());
                     break;
                 case "8":
+                    this.importDepartmentToCSV();
+                    break;
+                case "9":
                     return;
                 default:
                     System.out.println("Nhập sai, nhập lại.");
             }
         }
+    }
+
+    //  địa chỉ lưu file  D:\input_department.csv
+    private void importDepartmentToCSV() {
+        System.out.println("Nhập địa chỉ file cần import: ");
+        String pathName = sc.nextLine();
+        String message = departmentController.importDepartmentToCSV(pathName);
+        System.out.println(message);
     }
 
     public void showDepartment(List<Department> departments) {

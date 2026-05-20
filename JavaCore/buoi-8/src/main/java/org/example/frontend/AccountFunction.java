@@ -28,7 +28,8 @@ public class AccountFunction {
             System.out.println("3. Xóa account theo tên");
             System.out.println("4. Update account theo ID");
             System.out.println("5. Tìm kiếm account họ tên");
-            System.out.println("6. Thoát");
+            System.out.println("6. Import account từ file csv");
+            System.out.println("7. Thoát");
             String choice = sc.nextLine();
             switch (choice) {
                 case "1":
@@ -48,11 +49,22 @@ public class AccountFunction {
                     findByIdAndName();
                     break;
                 case "6":
+                    this.importAccountToCSV();
+                    break;
+                case "7":
                     return;
                 default:
                     System.out.println("Nhập sai, nhập lại.");
             }
         }
+    }
+
+    //  địa chỉ lưu file  D:\input_account.csv
+    private void importAccountToCSV() {
+        System.out.println("Nhập địa chỉ file cần import: ");
+        String pathName = sc.nextLine();
+        String message = accountController.importAccountToCSV(pathName);
+        System.out.println(message);
     }
 
     public  void findByIdAndName() {

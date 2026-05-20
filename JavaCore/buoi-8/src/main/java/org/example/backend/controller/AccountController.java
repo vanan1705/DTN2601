@@ -35,4 +35,7 @@ public class AccountController {
     public boolean checkExistEmail(String email, Integer id) {
         return accountService.checkExistEmail(email,id);
     }
+    public String importAccountToCSV(String pathName) {// trả về String; import thành công, import thất bại
+        return accountService.importAccountToCSV(pathName);
+    }
 }

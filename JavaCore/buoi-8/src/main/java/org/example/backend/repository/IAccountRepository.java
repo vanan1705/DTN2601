@@ -2,6 +2,8 @@ package org.example.backend.repository;
 
 import org.example.entity.Account;
 
+
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IAccountRepository {
@@ -12,4 +14,5 @@ public interface IAccountRepository {
     List<Account> findByIdAndName(int searchId, String searchUserName);
     boolean checkExistUserName(String userName, Integer id);
     boolean checkExistEmail(String email, Integer id);
+    boolean createAccounts(List<Account> accounts)throws SQLException;
 }

@@ -7,10 +7,7 @@ import org.example.entity.Position;
 import org.example.enums.PositionEnum;
 import org.example.utils.DBConnect;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -300,5 +297,38 @@ public class AccountRepositoryImpl implements IAccountRepository {
             e.printStackTrace();// show ra exception
         }
         return check;
+    }
+
+    @Override
+    public boolean createAccounts(List<Account> accounts) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            // b1: kết nối đến DB
+            connection = DBConnect.getConnection();
+            connection.setAutoCommit(false);// tắt auto commit để có lỗi thì còn rollback
+            // b2: tiến hành thêm mới account
+            String sql = "insert into account (email, user_name, full_name, department_id, position_id) values (?, ?, ?, ?, ?);";
+            preparedStatement = connection.prepareStatement(sql);
+            for (Account account : accounts) {
+                preparedStatement.setString(1, account.getEmail());
+                preparedStatement.setString(2, account.getUserName());
+                preparedStatement.setString(3, account.getFullName());
+                preparedStatement.setInt(4, account.getDepartment().getDepartmentID());
+                preparedStatement.setInt(5, account.getPosition().getPositionID());
+                preparedStatement.addBatch();
+            }
+
+            preparedStatement.executeBatch();// thuc thi câu lenh xong
+            connection.commit();// ko xảy ra lỗi , lưu dữ liệu vào DB
+            DBConnect.close(connection, preparedStatement, null);
+            return true;
+        } catch (Exception e) {// show các lỗi lien quan đén logic xử lý
+            connection.rollback();// hoàn lại dữ liệu nếu gặp lỗi
+            e.printStackTrace();// show ra exception
+        } finally {
+            DBConnect.close(connection, preparedStatement, null);
+        }
+        return false;
     }
 }

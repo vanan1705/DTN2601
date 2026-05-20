@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import org.example.entity.Department;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IDeparmentService {
@@ -13,4 +14,5 @@ public interface IDeparmentService {
     List<Department> getDeparmentWithMaxEmployee();
     List<Department> getDeparmentWithMinEmployee();
     boolean checkExistName(String name, Integer id);
+    String importDepartmentToCSV(String pathName);
 }

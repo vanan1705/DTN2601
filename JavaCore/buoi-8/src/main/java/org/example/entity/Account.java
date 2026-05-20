@@ -98,6 +98,13 @@ public class Account {
     public Account() {
     }
 
+    public Account(String email, String userName, String fullName, Department department, Position position) {
+        this.email = email;
+        this.userName = userName;
+        this.fullName = fullName;
+        this.department = department;
+        this.position = position;
+    }
 
     public Account(int accountID, String email, String userName, String firstName, String lastName) {
         this.accountID = accountID;

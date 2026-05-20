@@ -4,10 +4,7 @@ import org.example.backend.repository.IDeparmentRepository;
 import org.example.entity.Department;
 import org.example.utils.DBConnect;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -286,5 +283,64 @@ public class DeparmentRepositoryImpl implements IDeparmentRepository {
             e.printStackTrace();// show ra exception
         }
         return check;
+    }
+
+    @Override
+    public boolean createDepartments(List<Department> departments)throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            // b1: kết nối đến DB
+            connection = DBConnect.getConnection();
+            connection.setAutoCommit(false);// tắt auto commit để có lỗi thì còn rollback
+            // b2: tiến hành thêm mới department
+            String sql = "insert into department (department_name) values (?);";
+            preparedStatement = connection.prepareStatement(sql);
+            for (Department department : departments) {
+                preparedStatement.setString(1, department.getDepartmentName());
+                preparedStatement.addBatch();
+            }
+
+            preparedStatement.executeBatch();// thuc thi câu lenh xong
+            connection.commit();// ko xảy ra lỗi , lưu dữ liệu vào DB
+            DBConnect.close(connection, preparedStatement, null);
+            return true;
+        } catch (Exception e) {// show các lỗi lien quan đén logic xử lý
+            connection.rollback();// hoàn lại dữ liệu nếu gặp lỗi
+
+            e.printStackTrace();// show ra exception
+        } finally {
+            DBConnect.close(connection, preparedStatement, null);
+        }
+        return false;
+    }
+
+    @Override
+    public List<Department> findByName(String searchName) {
+        List<Department> departments = new ArrayList<>();
+
+        try {
+            // b1: kết nối đến DB
+            Connection connection = DBConnect.getConnection();
+            // b2: lấy dữ liệu từ bảng department
+            String sql = "select * from department where department_name like ?;";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            // set gia trị cho từng dấu ?
+            prepareStatement.setString(1, searchName);
+
+            ResultSet rs = prepareStatement.executeQuery();
+
+            while (rs.next()) {// lặp qua qua từng dòng của rs
+                int id = rs.getInt("department_id");
+                String name = rs.getString("department_name");
+
+                Department dep = new Department(id, name);
+                departments.add(dep);
+            }
+            DBConnect.close(connection, prepareStatement, rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return departments;
     }
 }
