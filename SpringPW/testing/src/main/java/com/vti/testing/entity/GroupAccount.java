@@ -12,34 +12,23 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "account")
+@Table(name = "group_account")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class GroupAccount {
 
     @Id
-    @Column(name = "account_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)// auto_increment
     private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "user_name", nullable = false, unique = true)
-    private String userName;
-
-    @Column(name = "full_name")
-    private String fullName;
-
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @ManyToOne
-    @JoinColumn(name = "position_id")
-    private Position position;
+    @JoinColumn(name = "group_id")
+    private Group group;
 
     @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)

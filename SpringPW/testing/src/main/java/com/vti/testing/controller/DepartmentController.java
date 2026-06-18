@@ -1,5 +1,6 @@
 package com.vti.testing.controller;
 
+import com.vti.testing.dto.DepartmentDTO;
 import com.vti.testing.entity.Department;
 import com.vti.testing.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,32 +18,32 @@ public class DepartmentController {
     private IDepartmentService departmentService;
 
     @GetMapping
-    public ResponseEntity<List<Department>> findAll() {
-        List<Department> departments = departmentService.findAll();
-        return new ResponseEntity<>(departments, HttpStatus.OK);
+    public ResponseEntity<List<DepartmentDTO>> findAll() {
+        List<DepartmentDTO>departmentDTOS = departmentService.findAll();
+        return new ResponseEntity<>(departmentDTOS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Department> findById(@PathVariable(name = "id") Integer id) {
-        Department department = departmentService.findById(id);
-        return new ResponseEntity<>(department, HttpStatus.OK);
+    public ResponseEntity<DepartmentDTO> findById(@PathVariable(name = "id") Integer id) {
+        DepartmentDTO departmentDTO = departmentService.findById(id);
+        return new ResponseEntity<>(departmentDTO, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Department> findByName(@PathVariable(name = "name") String name) {
-        Department department = departmentService.findByName(name);
-        return new ResponseEntity<>(department, HttpStatus.OK);
+    public ResponseEntity<DepartmentDTO> findByName(@PathVariable(name = "name") String name) {
+        DepartmentDTO departmentDTO = departmentService.findByName(name);
+        return new ResponseEntity<>(departmentDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Department> create (@RequestBody Department department) {
-        departmentService.create(department);
-        return new ResponseEntity<>(department, HttpStatus.CREATED);
+    public ResponseEntity<?> create (@RequestBody DepartmentDTO departmentDTO) {
+        departmentService.create(departmentDTO);
+        return new ResponseEntity<>("Create successfully", HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Department> update (@PathVariable(name = "id") Integer id, @RequestBody Department department) {
-        departmentService.update(id, department);
-        return new ResponseEntity<>(department, HttpStatus.CREATED);
+    public ResponseEntity<?> update (@PathVariable(name = "id") Integer id, @RequestBody DepartmentDTO departmentDTO) {
+        departmentService.update(id, departmentDTO);
+        return new ResponseEntity<>("Update successfully", HttpStatus.CREATED);
     }
 }

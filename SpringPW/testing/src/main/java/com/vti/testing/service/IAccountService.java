@@ -1,17 +1,21 @@
 package com.vti.testing.service;
 
+import com.vti.testing.dto.AccountDTO;
 import com.vti.testing.entity.Account;
+import com.vti.testing.form.AccountCreateForm;
 
 import java.util.List;
 
 public interface IAccountService {
-    List<Account> findAll();
+    List<AccountDTO> findAll();
 
-    Account findById(Integer id);
+    AccountDTO findById(Integer id);
 
-    Account findByUserName(String userName);
+    AccountDTO findByUserName(String userName);
 
-    void create(Account account);
+    void create(AccountCreateForm accountCreateForm);
 
-    Account update(Integer id, Account account);
+    void update(Integer id, AccountCreateForm accountCreateForm);
+
+    void deleteById(Integer id);
 }
