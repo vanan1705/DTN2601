@@ -1,20 +1,24 @@
 package com.vti.testing.service.impl;
 
-import aj.org.objectweb.asm.commons.Remapper;
+
 import com.vti.testing.Repository.IDepartmentRepository;
-import com.vti.testing.dto.AccountDTO;
 import com.vti.testing.dto.DepartmentDTO;
-import com.vti.testing.entity.Account;
+
 import com.vti.testing.entity.Department;
+import com.vti.testing.form.DeparmentSearchForm;
 import com.vti.testing.service.IDepartmentService;
+
+import com.vti.testing.specification.DeparmentCustomSpecification;
+import io.micrometer.common.util.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 
 @Service
 public class DepartmentServiceImpl implements IDepartmentService {
@@ -24,15 +28,16 @@ public class DepartmentServiceImpl implements IDepartmentService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<DepartmentDTO> findAll() {
-        List<Department> departments=  departmentRepository.findAll();
-        List<DepartmentDTO> departmentDTOS = new ArrayList<>();
-        for(Department dep: departments ){
-            DepartmentDTO departmentDTO = modelMapper.map(dep, DepartmentDTO.class);
-            departmentDTOS.add(departmentDTO);
+    public Page<DepartmentDTO> findAll(Pageable pageable, DeparmentSearchForm form) {
+     Specification<Department> where = Specification.unrestricted();
+        if(StringUtils.isNotEmpty(form.getName())){
+            DeparmentCustomSpecification name = new DeparmentCustomSpecification("name",form.getName());
+            where = where.and(name);
         }
 
-        return  departmentDTOS;
+        Page<Department> departmentPage=  departmentRepository.findAll(where, pageable);
+        Page<DepartmentDTO> dtoPage = departmentPage.map(department ->modelMapper.map(department, DepartmentDTO.class));
+        return  dtoPage;
     }
 
     @Override

@@ -4,8 +4,11 @@ package com.vti.testing.controller;
 import com.vti.testing.dto.AccountDTO;
 import com.vti.testing.entity.Account;
 import com.vti.testing.form.AccountCreateForm;
+import com.vti.testing.form.AccountSearchForm;
 import com.vti.testing.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +22,8 @@ public class AccountController {
     private IAccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> findAll() {
-        List<AccountDTO> accountDTOS = accountService.findAll();
+    public ResponseEntity<Page<AccountDTO>> findAll(Pageable  pageable, AccountSearchForm form) {
+        Page<AccountDTO> accountDTOS = accountService.findAll(pageable, form);
         return new ResponseEntity<>(accountDTOS, HttpStatus.OK);
     }
 

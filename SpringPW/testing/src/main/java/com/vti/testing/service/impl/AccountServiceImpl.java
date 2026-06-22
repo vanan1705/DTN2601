@@ -9,15 +9,19 @@ import com.vti.testing.entity.Account;
 import com.vti.testing.entity.Department;
 import com.vti.testing.entity.Position;
 import com.vti.testing.form.AccountCreateForm;
+import com.vti.testing.form.AccountSearchForm;
 import com.vti.testing.service.IAccountService;
+import com.vti.testing.specification.AccountCustomSpecification;
+import io.micrometer.common.util.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements IAccountService {
@@ -34,15 +38,33 @@ public class AccountServiceImpl implements IAccountService {
     private IPositionRepository positionRepository;
 
     @Override
-    public List<AccountDTO> findAll() {
-        List<Account> accounts = accountRepository.findAll();
-        List<AccountDTO> accountDTOS = new ArrayList<>();
-        for (Account acc: accounts){
+    public Page<AccountDTO> findAll(Pageable pageable, AccountSearchForm form) {
+        Specification<Account> where = Specification.unrestricted();
 
-            AccountDTO dto = modelMapper.map(acc, AccountDTO.class);
-            accountDTOS.add(dto);
+        if(StringUtils.isNotEmpty(form.getUserName())){
+            AccountCustomSpecification userName = new AccountCustomSpecification("userName",form.getUserName());
+            where = where.and(userName);
         }
-        return accountDTOS;
+        if(StringUtils.isNotEmpty(form.getEmail())){
+            AccountCustomSpecification email = new AccountCustomSpecification("email",form.getEmail());
+            where = where.and(email);
+        }
+        if(StringUtils.isNotEmpty(form.getFullName())){
+            AccountCustomSpecification fullName = new AccountCustomSpecification("fullName",form.getFullName());
+            where = where.and(fullName);
+        }
+        if(StringUtils.isNotEmpty(form.getPositionName())){
+            AccountCustomSpecification positionName = new AccountCustomSpecification("positionName",form.getPositionName());
+            where = where.and(positionName);
+        }
+        if(StringUtils.isNotEmpty(form.getDepartmentName())){
+            AccountCustomSpecification departmentName = new AccountCustomSpecification("departmentName",form.getDepartmentName());
+            where = where.and(departmentName);
+        }
+
+        Page<Account> accountPage = accountRepository.findAll(where,pageable);
+        Page<AccountDTO> dtoPage = accountPage.map(account -> modelMapper.map(account, AccountDTO.class));
+        return dtoPage;
     }
 
     @Override
